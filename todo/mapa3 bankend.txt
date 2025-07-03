@@ -1,0 +1,28 @@
+sriclick-backend/
+├── config/
+│   ├── db.js
+│   └── security.js
+├── controllers/
+│   ├── auth.controller.js
+│   ├── invoice.controller.js
+│   └── payment.controller.js
+├── models/
+│   ├── User.js
+│   ├── Invoice.js
+│   └── Payment.js
+├── routes/
+│   ├── api/
+│   │   ├── auth.routes.js
+│   │   ├── invoice.routes.js
+│   │   └── payment.routes.js
+│   └── index.js
+├── services/
+│   ├── email.service.js
+│   ├── sri.service.js
+│   └── payment.service.js
+├── utils/
+│   ├── logger.js
+│   └── security.js
+├── .env
+├── server.js
+└── package.json

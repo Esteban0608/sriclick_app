@@ -1,0 +1,33 @@
+sriclick-extension/
+├── icons/
+│   ├── icon16.png
+│   ├── icon48.png
+│   └── icon128.png
+│
+├── scripts/
+│   ├── background/
+│   │   ├── security-system.js (visto anteriormente)
+│   │   ├── credit-system.js (visto anteriormente)
+│   │   └── download-manager.js
+│   │
+│   ├── content/
+│   │   ├── sri-detector.js (visto anteriormente)
+│   │   └── download-handler.js
+│   │
+│   └── popup/
+│       ├── auth-manager.js
+│       ├── ui-controller.js
+│       └── payment-handler.js (visto anteriormente)
+│
+├── styles/
+│   ├── popup.css (visto anteriormente)
+│   └── content.css
+│
+├── templates/
+│   └── email-verification.html
+│
+├── manifest.json (visto anteriormente)
+├── popup.html (visto anteriormente)
+├── popup.js (visto anteriormente)
+├── content.js (visto anteriormente)
+└── background.js (visto anteriormente)

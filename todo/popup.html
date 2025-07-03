@@ -1,0 +1,165 @@
+<!-- Agregar esto en la sección de views-container después del credits-section -->
+<div class="plans-section" id="plansSection" style="display: none;">
+    <h3>Selecciona tu Plan</h3>
+    <div class="plans-container">
+        <!-- Plan Gratuito -->
+        <div class="plan-card" data-plan="free">
+            <div class="plan-header">
+                <h4>Plan Gratuito</h4>
+                <div class="plan-price">$0</div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li>✔ 3,000 facturas/notas de crédito</li>
+                    <li>✔ Válido por 1 mes</li>
+                    <li>✔ Solo para nuevos usuarios</li>
+                </ul>
+            </div>
+            <button class="btn btn-outline" id="selectFreePlan">Seleccionar</button>
+        </div>
+
+        <!-- Plan Básico -->
+        <div class="plan-card" data-plan="basic">
+            <div class="plan-header">
+                <h4>Plan Básico</h4>
+                <div class="plan-price">$40<span>/año</span></div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li>✔ 12,000 facturas/notas de crédito</li>
+                    <li>✔ Válido por 1 año</li>
+                    <li>✔ Soporte prioritario</li>
+                </ul>
+            </div>
+            <button class="btn btn-outline" id="selectBasicPlan">Seleccionar</button>
+        </div>
+
+        <!-- Plan Profesional -->
+        <div class="plan-card" data-plan="professional">
+            <div class="plan-header">
+                <h4>Plan Profesional</h4>
+                <div class="plan-price">$75<span>/año</span></div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li>✔ 75,000 facturas/notas de crédito</li>
+                    <li>✔ Válido por 1 año</li>
+                    <li>✔ Soporte prioritario</li>
+                    <li>✔ Exportación avanzada</li>
+                </ul>
+            </div>
+            <button class="btn btn-outline" id="selectProPlan">Seleccionar</button>
+        </div>
+
+        <!-- Plan Ilimitado -->
+        <div class="plan-card featured" data-plan="unlimited">
+            <div class="plan-header">
+                <h4>Plan Ilimitado</h4>
+                <div class="plan-price">$100<span>/año</span></div>
+            </div>
+            <div class="plan-features">
+                <ul>
+                    <li>✔ Facturas/notas ilimitadas</li>
+                    <li>✔ Válido por 1 año</li>
+                    <li>✔ Soporte 24/7</li>
+                    <li>✔ Exportación avanzada</li>
+                    <li>✔ Reportes personalizados</li>
+                </ul>
+            </div>
+            <button class="btn btn-primary" id="selectUnlimitedPlan">Seleccionar</button>
+        </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="payment-methods" id="paymentMethods" style="display: none;">
+        <h4>Método de Pago</h4>
+        <div class="method-options">
+            <label class="method-option">
+                <input type="radio" name="paymentMethod" value="creditCard" checked>
+                <div class="method-content">
+                    <span class="method-icon">💳</span>
+                    <span class="method-name">Tarjeta de Crédito</span>
+                </div>
+            </label>
+            
+            <label class="method-option">
+                <input type="radio" name="paymentMethod" value="transfer">
+                <div class="method-content">
+                    <span class="method-icon">🏦</span>
+                    <span class="method-name">Transferencia Bancaria</span>
+                </div>
+            </label>
+            
+            <label class="method-option">
+                <input type="radio" name="paymentMethod" value="deposit">
+                <div class="method-content">
+                    <span class="method-icon">📥</span>
+                    <span class="method-name">Depósito</span>
+                </div>
+            </label>
+        </div>
+
+        <!-- Payment Form -->
+        <div class="payment-form" id="creditCardForm">
+            <!-- Tarjeta de Crédito -->
+            <div class="form-group">
+                <label for="cardNumber">Número de Tarjeta</label>
+                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cardExpiry">Expiración</label>
+                    <input type="text" id="cardExpiry" placeholder="MM/AA">
+                </div>
+                <div class="form-group">
+                    <label for="cardCvc">CVC</label>
+                    <input type="text" id="cardCvc" placeholder="123">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cardName">Nombre en la Tarjeta</label>
+                <input type="text" id="cardName" placeholder="Nombre Apellido">
+            </div>
+        </div>
+
+        <div class="payment-form" id="transferForm" style="display: none;">
+            <!-- Transferencia Bancaria -->
+            <div class="bank-info">
+                <p><strong>Banco:</strong> Banco del Pacífico</p>
+                <p><strong>Cuenta:</strong> 1234567890</p>
+                <p><strong>Tipo:</strong> Corriente</p>
+                <p><strong>Beneficiario:</strong> SRICLICK S.A.</p>
+                <p><strong>RUC:</strong> 1234567890001</p>
+            </div>
+            <div class="form-group">
+                <label for="transferReceipt">Número de Comprobante</label>
+                <input type="text" id="transferReceipt" placeholder="Ingrese el número de transferencia">
+            </div>
+            <div class="form-group">
+                <label for="transferAmount">Monto Transferido (USD)</label>
+                <input type="number" id="transferAmount" placeholder="Ej: 40.00">
+            </div>
+        </div>
+
+        <div class="payment-form" id="depositForm" style="display: none;">
+            <!-- Depósito -->
+            <div class="bank-info">
+                <p><strong>Banco:</strong> Banco Pichincha</p>
+                <p><strong>Cuenta:</strong> 9876543210</p>
+                <p><strong>Tipo:</strong> Ahorros</p>
+                <p><strong>Beneficiario:</strong> SRICLICK S.A.</p>
+            </div>
+            <div class="form-group">
+                <label for="depositReceipt">Número de Comprobante</label>
+                <input type="text" id="depositReceipt" placeholder="Ingrese el número de depósito">
+            </div>
+            <div class="form-group">
+                <label for="depositAmount">Monto Depositado (USD)</label>
+                <input type="number" id="depositAmount" placeholder="Ej: 40.00">
+            </div>
+        </div>
+
+        <button class="btn btn-primary" id="confirmPayment">Confirmar Pago</button>
+        <button class="btn btn-outline" id="backToPlans">← Volver a Planes</button>
+    </div>
+</div>

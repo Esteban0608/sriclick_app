@@ -1,0 +1,54 @@
+/* Estilos para el content script */
+.sriclick-download-notification {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #4CAF50;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    z-index: 10000;
+    max-width: 300px;
+}
+
+.sriclick-download-progress {
+    margin-top: 10px;
+    background: rgba(0,0,0,0.1);
+    height: 5px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.sriclick-progress-bar {
+    height: 100%;
+    background: white;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.sriclick-highlight {
+    background-color: rgba(67, 160, 71, 0.3);
+    animation: sriclick-pulse 2s infinite;
+}
+
+@keyframes sriclick-pulse {
+    0% { background-color: rgba(67, 160, 71, 0.3); }
+    50% { background-color: rgba(67, 160, 71, 0.7); }
+    100% { background-color: rgba(67, 160, 71, 0.3); }
+}
+
+.sriclick-download-button {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.sriclick-download-button:hover {
+    background-color: #3367D6;
+}
