@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const invoiceController = require('../../controllers/invoice.controller');
-const authMiddleware = require('../../middlewares/auth');
+const authMiddleware = require('../../middlewares/auth.middleware');
 
 // Todas las rutas requieren autenticación
 router.use(authMiddleware.protect);
@@ -16,3 +16,6 @@ router.get('/:id', invoiceController.getInvoice);
 router.post('/download', invoiceController.downloadInvoices);
 
 module.exports = router;
+
+// Añadir estas rutas al archivo existente
+router.get('/stats', invoiceController.getInvoiceStats);

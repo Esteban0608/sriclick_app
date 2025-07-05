@@ -1,165 +1,533 @@
-<!-- Agregar esto en la sección de views-container después del credits-section -->
-<div class="plans-section" id="plansSection" style="display: none;">
-    <h3>Selecciona tu Plan</h3>
-    <div class="plans-container">
-        <!-- Plan Gratuito -->
-        <div class="plan-card" data-plan="free">
-            <div class="plan-header">
-                <h4>Plan Gratuito</h4>
-                <div class="plan-price">$0</div>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SRICLICK - Descarga Masiva SRI</title>
+    <link rel="stylesheet" href="styles/popup.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="popup-container">
+        <!-- Header -->
+        <header class="popup-header">
+            <div class="logo-section">
+                <img src="icons/icon48.png" alt="SRICLICK" class="logo">
+                <div class="title-section">
+                    <h1>SRICLICK</h1>
+                    <p class="subtitle">Descarga Masiva SRI</p>
+                </div>
             </div>
-            <div class="plan-features">
-                <ul>
-                    <li>✔ 3,000 facturas/notas de crédito</li>
-                    <li>✔ Válido por 1 mes</li>
-                    <li>✔ Solo para nuevos usuarios</li>
-                </ul>
+            <div class="status-indicator" id="statusIndicator">
+                <span class="status-dot"></span>
+                <span class="status-text">Listo</span>
             </div>
-            <button class="btn btn-outline" id="selectFreePlan">Seleccionar</button>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="main" id="mainTab">Principal</button>
+            <button class="tab-btn" data-tab="settings" id="settingsTab">Configuración</button>
+            <button class="tab-btn" data-tab="plans" id="plansTab">Planes</button>
+            <button class="tab-btn" data-tab="help" id="helpTab">Ayuda</button>
+        </nav>
+
+        <!-- Main Content Container -->
+        <div class="content-container">
+            
+            <!-- Main Tab Content -->
+            <div class="tab-content active" id="mainContent">
+                <!-- User Info Section -->
+                <div class="user-section" id="userSection">
+                    <div class="user-info" id="userInfo" style="display: none;">
+                        <div class="user-avatar">
+                            <span id="userInitials">U</span>
+                        </div>
+                        <div class="user-details">
+                            <h3 id="userName">Usuario</h3>
+                            <p class="user-plan" id="userPlan">Plan Gratuito</p>
+                            <div class="credits-info">
+                                <span class="credits-used" id="creditsUsed">0</span>
+                                <span class="credits-total">/ <span id="creditsTotal">3000</span></span>
+                                <span class="credits-label">descargas</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="auth-section" id="authSection">
+                        <div class="auth-prompt">
+                            <h3>¡Bienvenido a SRICLICK!</h3>
+                            <p>Inicia sesión para comenzar a descargar facturas del SRI</p>
+                            <button class="btn btn-primary" id="loginBtn">Iniciar Sesión</button>
+                            <button class="btn btn-outline" id="registerBtn">Registrarse</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Download Controls -->
+                <div class="download-section" id="downloadSection" style="display: none;">
+                    <h3>Control de Descarga</h3>
+                    
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <button class="action-btn" id="startDownloadBtn">
+                            <span class="btn-icon">⬇️</span>
+                            <span class="btn-text">Iniciar Descarga</span>
+                        </button>
+                        <button class="action-btn" id="pauseDownloadBtn" style="display: none;">
+                            <span class="btn-icon">⏸️</span>
+                            <span class="btn-text">Pausar</span>
+                        </button>
+                        <button class="action-btn" id="stopDownloadBtn" style="display: none;">
+                            <span class="btn-icon">⏹️</span>
+                            <span class="btn-text">Detener</span>
+                        </button>
+                    </div>
+
+                    <!-- Progress Section -->
+                    <div class="progress-section" id="progressSection" style="display: none;">
+                        <div class="progress-info">
+                            <span class="progress-label">Progreso:</span>
+                            <span class="progress-text" id="progressText">0 / 0</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                        <div class="download-stats">
+                            <div class="stat">
+                                <span class="stat-label">Exitosas:</span>
+                                <span class="stat-value" id="successCount">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Errores:</span>
+                                <span class="stat-value" id="errorCount">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Velocidad:</span>
+                                <span class="stat-value" id="downloadSpeed">0/min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Download Options -->
+                    <div class="download-options">
+                        <h4>Opciones de Descarga</h4>
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="autoRetryOption" checked>
+                                <span class="checkmark"></span>
+                                Reintentar automáticamente en caso de error
+                            </label>
+                        </div>
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="organizeFilesOption" checked>
+                                <span class="checkmark"></span>
+                                Organizar archivos por fecha
+                            </label>
+                        </div>
+                        <div class="option-group">
+                            <label for="delayOption">Retraso entre descargas (ms):</label>
+                            <input type="range" id="delayOption" min="1000" max="5000" value="2000" class="slider">
+                            <span class="slider-value" id="delayValue">2000ms</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Downloads -->
+                <div class="recent-section" id="recentSection" style="display: none;">
+                    <h4>Descargas Recientes</h4>
+                    <div class="recent-list" id="recentList">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Tab Content -->
+            <div class="tab-content" id="settingsContent">
+                <h3>Configuración</h3>
+                
+                <div class="settings-group">
+                    <h4>General</h4>
+                    <div class="setting-item">
+                        <label for="downloadPath">Carpeta de descarga:</label>
+                        <input type="text" id="downloadPath" placeholder="Carpeta por defecto del navegador">
+                        <button class="btn btn-small" id="selectPathBtn">Seleccionar</button>
+                    </div>
+                    <div class="setting-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="notificationsEnabled" checked>
+                            <span class="checkmark"></span>
+                            Mostrar notificaciones
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <h4>Avanzado</h4>
+                    <div class="setting-item">
+                        <label for="maxConcurrent">Descargas simultáneas:</label>
+                        <select id="maxConcurrent">
+                            <option value="1">1 (Recomendado)</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                    </div>
+                    <div class="setting-item">
+                        <label for="timeout">Tiempo de espera (segundos):</label>
+                        <input type="number" id="timeout" min="10" max="60" value="30">
+                    </div>
+                </div>
+
+                <div class="settings-actions">
+                    <button class="btn btn-outline" id="resetSettingsBtn">Restaurar por defecto</button>
+                    <button class="btn btn-primary" id="saveSettingsBtn">Guardar cambios</button>
+                </div>
+            </div>
+
+
+            <!-- Plans Tab Content -->
+            <div class="tab-content" id="plansContent">
+                <h3>Planes de Suscripción</h3>
+                
+                <div class="current-plan" id="currentPlan">
+                    <div class="plan-status">
+                        <h4>Plan Actual: <span id="currentPlanName">Gratuito</span></h4>
+                        <p class="plan-expires">Vence: <span id="planExpiry">30 días</span></p>
+                        <div class="usage-bar">
+                            <div class="usage-fill" id="usageFill"></div>
+                        </div>
+                        <p class="usage-text">
+                            <span id="usedCredits">0</span> de <span id="totalCredits">3,000</span> descargas utilizadas
+                        </p>
+                    </div>
+                </div>
+
+                <div class="plans-section" id="plansSection">
+                    <div class="plans-container">
+                        <!-- Plan Gratuito -->
+                        <div class="plan-card" data-plan="free">
+                            <div class="plan-header">
+                                <h4>Plan Gratuito</h4>
+                                <div class="plan-price">$0</div>
+                            </div>
+                            <div class="plan-features">
+                                <ul>
+                                    <li>✔ 3,000 facturas/notas de crédito</li>
+                                    <li>✔ Válido por 1 mes</li>
+                                    <li>✔ Solo para nuevos usuarios</li>
+                                    <li>✔ Soporte básico</li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-outline" id="selectFreePlan">Activar</button>
+                        </div>
+
+                        <!-- Plan Básico -->
+                        <div class="plan-card" data-plan="basic">
+                            <div class="plan-header">
+                                <h4>Plan Básico</h4>
+                                <div class="plan-price">$40<span>/año</span></div>
+                            </div>
+                            <div class="plan-features">
+                                <ul>
+                                    <li>✔ 12,000 facturas/notas de crédito</li>
+                                    <li>✔ Válido por 1 año</li>
+                                    <li>✔ Soporte prioritario</li>
+                                    <li>✔ Exportación básica</li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-outline" id="selectBasicPlan">Seleccionar</button>
+                        </div>
+
+                        <!-- Plan Profesional -->
+                        <div class="plan-card" data-plan="professional">
+                            <div class="plan-header">
+                                <h4>Plan Profesional</h4>
+                                <div class="plan-price">$75<span>/año</span></div>
+                            </div>
+                            <div class="plan-features">
+                                <ul>
+                                    <li>✔ 75,000 facturas/notas de crédito</li>
+                                    <li>✔ Válido por 1 año</li>
+                                    <li>✔ Soporte prioritario</li>
+                                    <li>✔ Exportación avanzada</li>
+                                    <li>✔ Reportes detallados</li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-outline" id="selectProPlan">Seleccionar</button>
+                        </div>
+
+                        <!-- Plan Ilimitado -->
+                        <div class="plan-card featured" data-plan="unlimited">
+                            <div class="plan-header">
+                                <h4>Plan Ilimitado</h4>
+                                <div class="plan-price">$100<span>/año</span></div>
+                                <div class="plan-badge">Más Popular</div>
+                            </div>
+                            <div class="plan-features">
+                                <ul>
+                                    <li>✔ Facturas/notas ilimitadas</li>
+                                    <li>✔ Válido por 1 año</li>
+                                    <li>✔ Soporte 24/7</li>
+                                    <li>✔ Exportación avanzada</li>
+                                    <li>✔ Reportes personalizados</li>
+                                    <li>✔ API de integración</li>
+                                </ul>
+                            </div>
+                            <button class="btn btn-primary" id="selectUnlimitedPlan">Seleccionar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Methods -->
+                <div class="payment-methods" id="paymentMethods" style="display: none;">
+                    <h4>Método de Pago</h4>
+                    <div class="selected-plan-info" id="selectedPlanInfo">
+                        <!-- Se llena dinámicamente -->
+                    </div>
+                    
+                    <div class="method-options">
+                        <label class="method-option">
+                            <input type="radio" name="paymentMethod" value="creditCard" checked>
+                            <div class="method-content">
+                                <span class="method-icon">💳</span>
+                                <span class="method-name">Tarjeta de Crédito</span>
+                            </div>
+                        </label>
+                        
+                        <label class="method-option">
+                            <input type="radio" name="paymentMethod" value="transfer">
+                            <div class="method-content">
+                                <span class="method-icon">🏦</span>
+                                <span class="method-name">Transferencia Bancaria</span>
+                            </div>
+                        </label>
+                        
+                        <label class="method-option">
+                            <input type="radio" name="paymentMethod" value="deposit">
+                            <div class="method-content">
+                                <span class="method-icon">📥</span>
+                                <span class="method-name">Depósito</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Payment Forms -->
+                    <div class="payment-form" id="creditCardForm">
+                        <div class="form-group">
+                            <label for="cardNumber">Número de Tarjeta</label>
+                            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cardExpiry">Expiración</label>
+                                <input type="text" id="cardExpiry" placeholder="MM/AA" maxlength="5">
+                            </div>
+                            <div class="form-group">
+                                <label for="cardCvc">CVC</label>
+                                <input type="text" id="cardCvc" placeholder="123" maxlength="4">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cardName">Nombre en la Tarjeta</label>
+                            <input type="text" id="cardName" placeholder="Nombre Apellido">
+                        </div>
+                    </div>
+
+                    <div class="payment-form" id="transferForm" style="display: none;">
+                        <div class="bank-info">
+                            <h5>Datos Bancarios</h5>
+                            <p><strong>Banco:</strong> Banco del Pacífico</p>
+                            <p><strong>Cuenta:</strong> 1234567890</p>
+                            <p><strong>Tipo:</strong> Corriente</p>
+                            <p><strong>Beneficiario:</strong> SRICLICK S.A.</p>
+                            <p><strong>RUC:</strong> 1234567890001</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="transferReceipt">Número de Comprobante</label>
+                            <input type="text" id="transferReceipt" placeholder="Ingrese el número de transferencia">
+                        </div>
+                        <div class="form-group">
+                            <label for="transferAmount">Monto Transferido (USD)</label>
+                            <input type="number" id="transferAmount" placeholder="Ej: 40.00" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="payment-form" id="depositForm" style="display: none;">
+                        <div class="bank-info">
+                            <h5>Datos Bancarios</h5>
+                            <p><strong>Banco:</strong> Banco Pichincha</p>
+                            <p><strong>Cuenta:</strong> 9876543210</p>
+                            <p><strong>Tipo:</strong> Ahorros</p>
+                            <p><strong>Beneficiario:</strong> SRICLICK S.A.</p>
+                            <p><strong>RUC:</strong> 1234567890001</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="depositReceipt">Número de Comprobante</label>
+                            <input type="text" id="depositReceipt" placeholder="Ingrese el número de depósito">
+                        </div>
+                        <div class="form-group">
+                            <label for="depositAmount">Monto Depositado (USD)</label>
+                            <input type="number" id="depositAmount" placeholder="Ej: 40.00" step="0.01">
+                        </div>
+                    </div>
+
+                    <div class="payment-actions">
+                        <button class="btn btn-primary" id="confirmPayment">Confirmar Pago</button>
+                        <button class="btn btn-outline" id="backToPlans">← Volver a Planes</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Help Tab Content -->
+            <div class="tab-content" id="helpContent">
+                <h3>Ayuda y Soporte</h3>
+                
+                <div class="help-section">
+                    <h4>¿Cómo usar SRICLICK?</h4>
+                    <div class="help-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h5>Inicia sesión en el SRI</h5>
+                                <p>Ve a <a href="https://srienlinea.sri.gob.ec" target="_blank">srienlinea.sri.gob.ec</a> e inicia sesión con tus credenciales.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h5>Navega a Comprobantes Recibidos</h5>
+                                <p>Ve a la sección de "Comprobantes Recibidos" en el portal del SRI.</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h5>Activa SRICLICK</h5>
+                                <p>Haz clic en el ícono de SRICLICK en tu navegador y presiona "Iniciar Descarga".</p>
+                            </div>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">4</div>
+                            <div class="step-content">
+                                <h5>Monitorea el progreso</h5>
+                                <p>La extensión descargará automáticamente todos los comprobantes disponibles.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <h4>Preguntas Frecuentes</h4>
+                    <div class="faq-list">
+                        <div class="faq-item">
+                            <div class="faq-question">¿Cuántos archivos puedo descargar?</div>
+                            <div class="faq-answer">Depende de tu plan. El plan gratuito permite 3,000 descargas por mes.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">¿Es seguro usar SRICLICK?</div>
+                            <div class="faq-answer">Sí, SRICLICK no almacena tus credenciales y solo interactúa con el sitio oficial del SRI.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">¿Qué formatos de archivo se descargan?</div>
+                            <div class="faq-answer">Se descargan archivos PDF y XML según estén disponibles en el SRI.</div>
+                        </div>
+                        <div class="faq-item">
+                            <div class="faq-question">¿Puedo pausar las descargas?</div>
+                            <div class="faq-answer">Sí, puedes pausar y reanudar las descargas en cualquier momento.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <h4>Soporte Técnico</h4>
+                    <div class="support-options">
+                        <div class="support-option">
+                            <div class="support-icon">📧</div>
+                            <div class="support-content">
+                                <h5>Email</h5>
+                                <p>soporte@sriclick.com</p>
+                                <small>Respuesta en 24 horas</small>
+                            </div>
+                        </div>
+                        <div class="support-option">
+                            <div class="support-icon">💬</div>
+                            <div class="support-content">
+                                <h5>Chat en vivo</h5>
+                                <p>Disponible para planes pagos</p>
+                                <small>Lunes a Viernes 9:00 - 18:00</small>
+                            </div>
+                        </div>
+                        <div class="support-option">
+                            <div class="support-icon">📚</div>
+                            <div class="support-content">
+                                <h5>Documentación</h5>
+                                <p>Guías detalladas y tutoriales</p>
+                                <small>Disponible 24/7</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="help-section">
+                    <h4>Información de la Extensión</h4>
+                    <div class="app-info">
+                        <div class="info-row">
+                            <span class="info-label">Versión:</span>
+                            <span class="info-value" id="appVersion">1.0.0</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Última actualización:</span>
+                            <span class="info-value" id="lastUpdate">Julio 2025</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="info-label">Desarrollador:</span>
+                            <span class="info-value">SRICLICK Team</span>
+                        </div>
+                    </div>
+                    
+                    <div class="help-actions">
+                        <button class="btn btn-outline" id="checkUpdatesBtn">Buscar actualizaciones</button>
+                        <button class="btn btn-outline" id="reportBugBtn">Reportar problema</button>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!-- Plan Básico -->
-        <div class="plan-card" data-plan="basic">
-            <div class="plan-header">
-                <h4>Plan Básico</h4>
-                <div class="plan-price">$40<span>/año</span></div>
+        <!-- Footer -->
+        <footer class="popup-footer">
+            <div class="footer-links">
+                <a href="#" id="privacyLink">Privacidad</a>
+                <a href="#" id="termsLink">Términos</a>
+                <a href="#" id="contactLink">Contacto</a>
             </div>
-            <div class="plan-features">
-                <ul>
-                    <li>✔ 12,000 facturas/notas de crédito</li>
-                    <li>✔ Válido por 1 año</li>
-                    <li>✔ Soporte prioritario</li>
-                </ul>
+            <div class="footer-version">
+                v1.0.0
             </div>
-            <button class="btn btn-outline" id="selectBasicPlan">Seleccionar</button>
+        </footer>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+            <div class="loading-spinner"></div>
+            <div class="loading-text" id="loadingText">Cargando...</div>
         </div>
 
-        <!-- Plan Profesional -->
-        <div class="plan-card" data-plan="professional">
-            <div class="plan-header">
-                <h4>Plan Profesional</h4>
-                <div class="plan-price">$75<span>/año</span></div>
+        <!-- Notification Toast -->
+        <div class="notification-toast" id="notificationToast" style="display: none;">
+            <div class="toast-content">
+                <span class="toast-icon" id="toastIcon">ℹ️</span>
+                <span class="toast-message" id="toastMessage">Mensaje</span>
             </div>
-            <div class="plan-features">
-                <ul>
-                    <li>✔ 75,000 facturas/notas de crédito</li>
-                    <li>✔ Válido por 1 año</li>
-                    <li>✔ Soporte prioritario</li>
-                    <li>✔ Exportación avanzada</li>
-                </ul>
-            </div>
-            <button class="btn btn-outline" id="selectProPlan">Seleccionar</button>
-        </div>
-
-        <!-- Plan Ilimitado -->
-        <div class="plan-card featured" data-plan="unlimited">
-            <div class="plan-header">
-                <h4>Plan Ilimitado</h4>
-                <div class="plan-price">$100<span>/año</span></div>
-            </div>
-            <div class="plan-features">
-                <ul>
-                    <li>✔ Facturas/notas ilimitadas</li>
-                    <li>✔ Válido por 1 año</li>
-                    <li>✔ Soporte 24/7</li>
-                    <li>✔ Exportación avanzada</li>
-                    <li>✔ Reportes personalizados</li>
-                </ul>
-            </div>
-            <button class="btn btn-primary" id="selectUnlimitedPlan">Seleccionar</button>
+            <button class="toast-close" id="toastClose">×</button>
         </div>
     </div>
 
-    <!-- Payment Methods -->
-    <div class="payment-methods" id="paymentMethods" style="display: none;">
-        <h4>Método de Pago</h4>
-        <div class="method-options">
-            <label class="method-option">
-                <input type="radio" name="paymentMethod" value="creditCard" checked>
-                <div class="method-content">
-                    <span class="method-icon">💳</span>
-                    <span class="method-name">Tarjeta de Crédito</span>
-                </div>
-            </label>
-            
-            <label class="method-option">
-                <input type="radio" name="paymentMethod" value="transfer">
-                <div class="method-content">
-                    <span class="method-icon">🏦</span>
-                    <span class="method-name">Transferencia Bancaria</span>
-                </div>
-            </label>
-            
-            <label class="method-option">
-                <input type="radio" name="paymentMethod" value="deposit">
-                <div class="method-content">
-                    <span class="method-icon">📥</span>
-                    <span class="method-name">Depósito</span>
-                </div>
-            </label>
-        </div>
+    <!-- Scripts -->
+    <script src="popup/ui-controller.js"></script>
+    <script src="popup/auth-manager.js"></script>
+    <script src="popup/payment-handler.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
 
-        <!-- Payment Form -->
-        <div class="payment-form" id="creditCardForm">
-            <!-- Tarjeta de Crédito -->
-            <div class="form-group">
-                <label for="cardNumber">Número de Tarjeta</label>
-                <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456">
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="cardExpiry">Expiración</label>
-                    <input type="text" id="cardExpiry" placeholder="MM/AA">
-                </div>
-                <div class="form-group">
-                    <label for="cardCvc">CVC</label>
-                    <input type="text" id="cardCvc" placeholder="123">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="cardName">Nombre en la Tarjeta</label>
-                <input type="text" id="cardName" placeholder="Nombre Apellido">
-            </div>
-        </div>
-
-        <div class="payment-form" id="transferForm" style="display: none;">
-            <!-- Transferencia Bancaria -->
-            <div class="bank-info">
-                <p><strong>Banco:</strong> Banco del Pacífico</p>
-                <p><strong>Cuenta:</strong> 1234567890</p>
-                <p><strong>Tipo:</strong> Corriente</p>
-                <p><strong>Beneficiario:</strong> SRICLICK S.A.</p>
-                <p><strong>RUC:</strong> 1234567890001</p>
-            </div>
-            <div class="form-group">
-                <label for="transferReceipt">Número de Comprobante</label>
-                <input type="text" id="transferReceipt" placeholder="Ingrese el número de transferencia">
-            </div>
-            <div class="form-group">
-                <label for="transferAmount">Monto Transferido (USD)</label>
-                <input type="number" id="transferAmount" placeholder="Ej: 40.00">
-            </div>
-        </div>
-
-        <div class="payment-form" id="depositForm" style="display: none;">
-            <!-- Depósito -->
-            <div class="bank-info">
-                <p><strong>Banco:</strong> Banco Pichincha</p>
-                <p><strong>Cuenta:</strong> 9876543210</p>
-                <p><strong>Tipo:</strong> Ahorros</p>
-                <p><strong>Beneficiario:</strong> SRICLICK S.A.</p>
-            </div>
-            <div class="form-group">
-                <label for="depositReceipt">Número de Comprobante</label>
-                <input type="text" id="depositReceipt" placeholder="Ingrese el número de depósito">
-            </div>
-            <div class="form-group">
-                <label for="depositAmount">Monto Depositado (USD)</label>
-                <input type="number" id="depositAmount" placeholder="Ej: 40.00">
-            </div>
-        </div>
-
-        <button class="btn btn-primary" id="confirmPayment">Confirmar Pago</button>
-        <button class="btn btn-outline" id="backToPlans">← Volver a Planes</button>
-    </div>
-</div>

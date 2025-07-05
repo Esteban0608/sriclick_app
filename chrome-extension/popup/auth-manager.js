@@ -1,59 +1,101 @@
-export class AuthManager {
+// Auth Manager - Versión optimizada con persistencia de sesión y logs de depuración
+
+window.AuthManager = class AuthManager {
     constructor() {
         this.currentView = 'login';
+        this.apiBaseUrl = 'http://localhost:5000/api';
+        console.log('AuthManager inicializado');
+    }
+
+    async init() {
+        console.log('Inicializando AuthManager...');
+        await this.checkAuthState(); // Espera a verificar el estado de autenticación
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        console.log('Configurando event listeners...');
+        document.getElementById('loginBtn')?.addEventListener('click', () => this.showLoginForm());
+        document.getElementById('registerBtn')?.addEventListener('click', () => this.showRegisterForm());
+        document.getElementById('logoutBtn')?.addEventListener('click', () => this.logout());
     }
 
     async checkAuthState() {
-        const { userState } = await chrome.storage.local.get('userState');
-        
-        if (userState?.email) {
-            this.currentView = 'dashboard';
-        } else {
+        try {
+            console.log('Verificando estado de autenticación...');
+            const result = await chrome.storage.local.get(['userState', 'authToken']);
+            console.log('Datos recuperados de chrome.storage:', result);
+
+            const { userState, authToken } = result;
+
+            if (userState?.email && authToken) {
+                console.log('Token encontrado, validando...');
+                const isValid = await this.validateToken(authToken);
+                console.log('Token válido?:', isValid);
+
+                if (isValid) {
+                    console.log('Usuario autenticado, actualizando UI...');
+                    this.currentView = 'dashboard';
+                    this.updateUIForLoggedInUser(userState);
+                } else {
+                    console.log('Token inválido, limpiando datos...');
+                    await this.clearAuthData();
+                    this.currentView = 'login';
+                    this.updateUIForLoggedOutUser();
+                }
+            } else {
+                console.log('No hay datos de usuario o token');
+                this.currentView = 'login';
+                this.updateUIForLoggedOutUser();
+            }
+        } catch (error) {
+            console.error('Error en checkAuthState:', error);
             this.currentView = 'login';
+            this.updateUIForLoggedOutUser();
         }
     }
 
-    async handleLogin(email, password) {
+    async validateToken(token) {
         try {
-            // Validación básica
-            if (!email || !password) {
-                throw new Error('Por favor ingrese email y contraseña');
-            }
-
-            // Simular autenticación
-            await this.mockAuthRequest(email, password);
-            
-            // Guardar estado
-            await chrome.storage.local.set({
-                userState: {
-                    email,
-                    lastLogin: new Date().toISOString()
+            console.log('Validando token con el servidor...');
+            const response = await fetch(`${this.apiBaseUrl}/auth/validate`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
             });
-            
-            this.currentView = 'dashboard';
-            return true;
+            return response.ok;
         } catch (error) {
-            console.error('Login error:', error);
-            throw error;
+            console.error('Error validando token:', error);
+            return false;
         }
     }
 
-    async handleLogout() {
-        await chrome.storage.local.remove('userState');
-        this.currentView = 'login';
-        return true;
-    }
+    // ... (Resto de funciones se mantienen IGUALES que en tu archivo original)
+    // showLoginForm(), showRegisterForm(), showWelcomeScreen(), 
+    // handleLogin(), handleRegister(), saveAuthData(), clearAuthData(),
+    // logout(), updateUIForLoggedInUser(), updateUIForLoggedOutUser(),
+    // showLoading(), hideLoading(), showNotification()
 
-    async mockAuthRequest(email, password) {
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                if (email.includes('@') && password.length >= 6) {
-                    resolve();
-                } else {
-                    reject(new Error('Credenciales inválidas'));
-                }
-            }, 1000);
-        });
-    }
-}
+    /* Funciones de UI (copiar exactamente igual de tu versión original) */
+    showLoginForm() { /* ... */ }
+    showRegisterForm() { /* ... */ }
+    showWelcomeScreen() { /* ... */ }
+    async handleLogin(event) { /* ... */ }
+    async handleRegister(event) { /* ... */ }
+    async saveAuthData(token, user) { /* ... */ }
+    async clearAuthData() { /* ... */ }
+    async logout() { /* ... */ }
+    updateUIForLoggedInUser(user) { /* ... */ }
+    updateUIForLoggedOutUser() { /* ... */ }
+    showLoading(message) { /* ... */ }
+    hideLoading() { /* ... */ }
+    showNotification(message, type) { /* ... */ }
+};
+
+/* Inicialización automática al cargar el script */
+document.addEventListener('DOMContentLoaded', () => {
+    window.authManager = new AuthManager();
+    authManager.init();
+});

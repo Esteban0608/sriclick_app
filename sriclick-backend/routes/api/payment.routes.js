@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const paymentController = require('../../controllers/payment.controller');
-const authMiddleware = require('../../middlewares/auth');
+const authMiddleware = require("../../middlewares/auth.middleware");
 
 // Ruta para obtener planes disponibles
 router.get('/plans', (req, res) => {
@@ -40,3 +40,8 @@ router.get('/plans', (req, res) => {
 router.post('/process', authMiddleware.protect, paymentController.processPayment);
 
 module.exports = router;
+
+// Añadir estas rutas al archivo existente
+router.post('/activate-free', authMiddleware.protect, paymentController.activateFreePlan);
+router.get('/history', authMiddleware.protect, paymentController.getPaymentHistory);
+router.get('/:id', authMiddleware.protect, paymentController.getPaymentStatus);
